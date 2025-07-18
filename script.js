@@ -421,3 +421,130 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 });
+
+
+
+// Menu Mobile - Funcionalidade Melhorada
+document.addEventListener("DOMContentLoaded", function () {
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("nav-menu");
+  const navLinks = document.querySelectorAll('.nav-menu a');
+  
+  // Função para abrir/fechar menu
+  function toggleMenu() {
+    const isOpen = menu.classList.contains('show');
+    
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  }
+  
+  // Função para abrir menu
+  function openMenu() {
+    menu.classList.add('show');
+    toggle.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Previne scroll no body
+    
+    // Adiciona listener para fechar quando clicar fora
+    setTimeout(() => {
+      document.addEventListener('click', handleOutsideClick);
+    }, 100);
+  }
+  
+  // Função para fechar menu
+  function closeMenu() {
+    menu.classList.remove('show');
+    toggle.classList.remove('active');
+    document.body.style.overflow = 'auto'; // Restaura scroll no body
+    
+    // Remove listener de click fora
+    document.removeEventListener('click', handleOutsideClick);
+  }
+  
+  // Função para lidar com cliques fora do menu
+  function handleOutsideClick(event) {
+    const isClickInsideMenu = menu.contains(event.target);
+    const isClickOnToggle = toggle.contains(event.target);
+    
+    if (!isClickInsideMenu && !isClickOnToggle) {
+      closeMenu();
+    }
+  }
+  
+  // Event listener para o botão toggle
+  toggle.addEventListener("click", function(e) {
+    e.stopPropagation();
+    toggleMenu();
+  });
+  
+  // Fecha o menu quando clicar em um link
+  navLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      closeMenu();
+    });
+  });
+  
+  // Fecha o menu quando pressionar ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && menu.classList.contains('show')) {
+      closeMenu();
+    }
+  });
+  
+  // Fecha o menu quando redimensionar a tela
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 768 && menu.classList.contains('show')) {
+      closeMenu();
+    }
+  });
+  
+  // Melhoria no scroll suave
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      
+      if (target) {
+        const header = document.querySelector('.header');
+        const headerHeight = header ? header.offsetHeight : 0;
+        const targetPosition = target.offsetTop - headerHeight - 20;
+        
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+  
+  // Adiciona indicador visual no menu ativo
+  function updateActiveMenuItem() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+    
+    window.addEventListener('scroll', function() {
+      let current = '';
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        
+        if (window.pageYOffset >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+      
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+  }
+  
+  // Inicia o sistema de menu ativo
+  updateActiveMenuItem();
+});
