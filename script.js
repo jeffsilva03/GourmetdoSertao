@@ -419,11 +419,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicia as notificações de compra
     createPurchaseNotification();
     
-    // Adiciona favicon dinâmico
-    const favicon = document.createElement('link');
-    favicon.rel = 'icon';
-    favicon.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🍽️</text></svg>';
-    document.head.appendChild(favicon);
     
-    console.log('Gourmet do Sertão - Website carregado com sucesso! 🍽️');
 });
